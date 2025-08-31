@@ -1,0 +1,12 @@
+fastapi
+fastapi[standard]
+pydantic
+pydantic-settings
+asyncpg
+sqlmodel
+alembic
+passlib
+bcrypt
+pyjwt
+redis
+fastapi-mail

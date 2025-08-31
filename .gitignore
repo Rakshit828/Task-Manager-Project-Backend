@@ -1,0 +1,9 @@
+.env
+__pycache__/
+.venv/
+src/__pycache__/
+books/__pycache__/
+db/__pycache__/
+A Notes/
+migrations/__pycache__/
+migrations/versions/__pycache__/
