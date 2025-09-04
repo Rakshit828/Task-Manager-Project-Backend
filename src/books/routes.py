@@ -27,7 +27,7 @@ admin_checker = Depends(RoleChecker(['admin']))
 )
 async def get_all_books(
     session: AsyncSession = Depends(get_session), 
-    user_data: dict = Depends(AccessTokenBearer())  # We are actually calling the class to create the instance
+    user_data: dict = Depends(AccessTokenBearer())  
 ):
     books =  await book_service.get_all_books(session)
     if books:

@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel, Field, Column
 import sqlalchemy.dialects.postgresql as pg
 import uuid
-from typing import List, Optional, Annotated
+from typing import List, Optional, Annotated, Literal
 from datetime import datetime, date, time
 
 
@@ -24,7 +24,9 @@ class Tasks(SQLModel, table=True):
 
     start_time: time
     deadline: time
+    # priority: Literal['high', 'medium', 'low']
     is_completed: bool = False
+
 
     progress_rate: Annotated[
         Optional[int], 
@@ -35,5 +37,8 @@ class Tasks(SQLModel, table=True):
             le=100
         )
     ] 
+
+    user_id: Optional[uuid.UUID] = Field(default=None, foreign_key="users.user_uid")
+    # This is a foreign key that refrences to the userId of the Users table
 
 # The start time and deadline will recive the time in 24-hour format

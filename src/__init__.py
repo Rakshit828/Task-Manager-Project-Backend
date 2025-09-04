@@ -7,12 +7,17 @@ import logging
 from src.books.routes import book_router
 from src.auth.routes import auth_router
 from src.tasks.routes import task_router
+from src.admin.routes import admin_router, admin_checker
 from src.db.main import init_db
 
 from src.exceptions.base import create_exception_handler, BooklyBaseException
 from src.exceptions.book_errors import (
     BookNotFoundError,
     EmptyBookTableError
+)
+from src.exceptions.task_errors import (
+    TaskNotFoundError,
+    EmptyTasksError
 )
 from src.exceptions.auth_errors import (
     EmailAlreadyExistsError,
@@ -24,6 +29,7 @@ from src.exceptions.auth_errors import (
     InsufficientPermissionError,
     RevokedTokenError
 )
+from src.auth.dependencies import RoleChecker
 
 version = 'v1'
 
@@ -45,6 +51,7 @@ class Tags(str, Enum):
     books = "Books"
     auth = "Authentication"
     tasks = "Tasks"
+    admin = "Admin Panel"
 
 
 # Mapping of exception -> (status_code, error_type, resolution)
@@ -59,6 +66,8 @@ error_mapping = {
     RevokedTokenError: (401, "RevokedTokenError", "Login again to obtain a new token"),
     BookNotFoundError: (404, "BookNotFoundError", "Verify the book ID exists"),
     EmptyBookTableError: (404, "EmptyBookTableError", "Add books to the database before querying"),
+    TaskNotFoundError: (404, "TaskNotFoundError", "Verify the book ID exists"),
+    EmptyTasksError: (404, "EmptyTasksError", "Add tasks first")
 }
 
 # Register all handlers
@@ -90,5 +99,6 @@ for exc_class, (status_code, error_type, resolution) in error_mapping.items():
 
 app.include_router(task_router, prefix=f'/api/{version}/tasks', tags=[Tags.tasks])
 app.include_router(auth_router, prefix=f'/api/{version}/auth', tags=[Tags.auth])
+app.include_router(admin_router, prefix=f'/api/{version}/admin', tags=[Tags.admin], dependencies=[admin_checker])
 
 # app.include_router(book_router, prefix=f"/api/{version}/books", tags=[Tags.books])

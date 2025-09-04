@@ -1,5 +1,5 @@
 from fastapi.security import HTTPBearer
-from fastapi import HTTPException, Depends, status, Request
+from fastapi import Depends, Request
 from sqlmodel.ext.asyncio.session import AsyncSession
 from typing import List
 

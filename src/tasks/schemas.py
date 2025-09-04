@@ -13,13 +13,14 @@ class ResponseTaskSchema(BaseModel):
     deadline: time
     is_completed: bool = False
     progress_rate: int
+    user_id: Optional[UUID] = None
 
     class Config:
         orm_mode = True
 
 
 class CreateTaskSchema(BaseModel):
-    title: str = Field(max_length=10)
+    title: str = Field(max_length=50)
     description: Optional[str] = Field(max_length=100)
     start_time: time
     deadline: time

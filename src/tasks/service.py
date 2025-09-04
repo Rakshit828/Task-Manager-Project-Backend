@@ -18,14 +18,14 @@ class BookService:
         statement = select(Tasks).where(Tasks.task_uid == uuid)
         result = await session.exec(statement)
         result = result.first()
-        if not result:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Book not found"})
-        return result.first()
+        return result
 
 
-    async def add_taks(self, task: CreateTaskSchema, session: AsyncSession) -> Tasks:
+    async def add_taks(self, task: CreateTaskSchema, user_id: str, session: AsyncSession) -> Tasks:
         task_details = task.model_dump()
         new_task = Tasks(**task_details)
+        new_task.user_id = user_id
+        
         session.add(new_task)
         await session.commit()
         return new_task
@@ -35,7 +35,7 @@ class BookService:
         result = await self.get_a_task(uuid, session)
         print(result)
         if not result:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Book not found"})
+            return None
         task_details_dict = task_details.model_dump(exclude_unset=True, exclude_defaults=True)
         print(task_details_dict)
         for key, value in task_details_dict.items():
@@ -49,7 +49,7 @@ class BookService:
     async def delete_task(self, uuid: UUID, session: AsyncSession) -> Tasks:
         result = await self.get_a_task(uuid, session)
         if not result:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Book not found"})
+            return None
         
         await session.delete(result)
         await session.commit()
